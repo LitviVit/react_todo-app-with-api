@@ -114,7 +114,10 @@ export const App: React.FC = () => {
           }
         });
       })
-      .finally(() => setIsLoading(false));
+      .finally(() => {
+        setIsLoading(false);
+        setTimeout(() => inputRef.current?.focus(), 0);
+      });
   };
 
   const handleEditTodo = async (id: number, data: Partial<Todo>) => {
