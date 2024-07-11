@@ -46,7 +46,7 @@ export const TodoItem: React.FC<Props> = ({
       onEdit(todo.id, { title: editTitle.trim() })
         .then(() => setCurrentEditing(null))
         .catch(() => {
-          //inputRef.current?.focus();
+          inputRef.current?.focus();
         });
     } else {
       setCurrentEditing(null);

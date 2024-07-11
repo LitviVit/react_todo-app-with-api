@@ -82,6 +82,7 @@ export const App: React.FC = () => {
     deleteTodo(id)
       .then(() => {
         setTodos(prevTodos => prevTodos.filter(todo => todo.id !== id));
+        setTimeout(() => inputRef.current?.focus(), 0);
       })
       .catch(() => {
         setErrorMessage('Unable to delete a todo');
@@ -119,26 +120,28 @@ export const App: React.FC = () => {
   const handleEditTodo = async (id: number, data: Partial<Todo>) => {
     setIsLoading(true);
     setEditingTodoId(id);
-    const editedTodo = await editTodo(id, data);
+    try {
+      const editedTodo = await editTodo(id, data);
 
-    if (editedTodo.id) {
-      setTodos(prevTodos =>
-        prevTodos.map(todo => {
-          if (todo.id === id) {
-            return { ...editedTodo };
-          }
+      if (editedTodo.id) {
+        setTodos(prevTodos =>
+          prevTodos.map(todo => {
+            if (todo.id === id) {
+              return { ...editedTodo };
+            }
 
-          return todo;
-        }),
-      );
-      setEditingTodoId(null);
-    } else {
+            return todo;
+          }),
+        );
+        setEditingTodoId(null);
+      }
+    } catch {
       setErrorMessage('Unable to update a todo');
       setIsLoading(false);
       throw new Error();
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
   const handleToggleAll = () => {
