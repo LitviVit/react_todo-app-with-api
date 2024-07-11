@@ -43,21 +43,18 @@ export const Header: React.FC<Props> = ({
     }
 
     onAdd(trimmedTitle);
-    // if (!isLoading) {
-    //   setTitle('');
-    // }
   };
 
   useEffect(() => {
     if (!isLoading && !isError) {
       setTitle('');
     }
-  }, [isLoading, isError]);
+  }, [isLoading]);
 
   return (
     <header className="todoapp__header">
       {/* this button should have `active` class only if all todos are completed */}
-      {!isLoading && todos.length > 0 && (
+      {!isLoading && todos.length && (
         <button
           type="button"
           className={classNames('todoapp__toggle-all', {
