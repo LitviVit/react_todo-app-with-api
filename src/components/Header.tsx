@@ -61,7 +61,7 @@ export const Header = forwardRef<HTMLInputElement, Props>(
     return (
       <header className="todoapp__header">
         {/* this button should have `active` class only if all todos are completed */}
-        {!isLoading && todos.length && (
+        {!isLoading && todos.length > 0 && (
           <button
             type="button"
             className={classNames('todoapp__toggle-all', {
