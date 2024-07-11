@@ -36,7 +36,6 @@ export const TodoList: React.FC<Props> = ({
               deletingTodoId={deletingTodoId}
               onEdit={onEdit}
               editingTodoId={editingTodoId}
-              //key={todo.id}
             />
           </CSSTransition>
         ))}

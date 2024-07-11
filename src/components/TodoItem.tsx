@@ -125,7 +125,6 @@ export const TodoItem: React.FC<Props> = ({
         </form>
       )}
 
-      {/* overlay will cover the todo while it is being deleted or updated */}
       <div
         data-cy="TodoLoader"
         className={classNames('modal overlay', {

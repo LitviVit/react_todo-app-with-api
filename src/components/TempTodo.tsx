@@ -33,7 +33,6 @@ export const TempTodo: React.FC<Props> = ({
       <span data-cy="TodoTitle" className="todo__title">
         {tempTodo.title}
       </span>
-      {/* Remove button appears only on hover */}
       <button
         type="button"
         className="todo__remove"
@@ -42,7 +41,6 @@ export const TempTodo: React.FC<Props> = ({
       >
         ×
       </button>
-      {/* overlay will cover the todo while it is being deleted or updated */}
       <div
         data-cy="TodoLoader"
         className={classNames('modal overlay', { 'is-active': isLoading })}

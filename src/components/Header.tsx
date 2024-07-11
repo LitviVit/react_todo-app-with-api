@@ -29,7 +29,6 @@ export const Header = forwardRef<HTMLInputElement, Props>(
     inputRef,
   ) => {
     const [title, setTitle] = useState('');
-    //const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
       if (inputRef && tempTodo === null) {
@@ -60,7 +59,6 @@ export const Header = forwardRef<HTMLInputElement, Props>(
 
     return (
       <header className="todoapp__header">
-        {/* this button should have `active` class only if all todos are completed */}
         {!isLoading && todos.length > 0 && (
           <button
             type="button"
@@ -72,7 +70,6 @@ export const Header = forwardRef<HTMLInputElement, Props>(
           />
         )}
 
-        {/* Add a todo on form submit */}
         <form onSubmit={handleSubmit}>
           <input
             data-cy="NewTodoField"

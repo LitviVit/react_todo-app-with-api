@@ -86,7 +86,6 @@ export const App: React.FC = () => {
       })
       .catch(() => {
         setErrorMessage('Unable to delete a todo');
-        //setTimeout(() => setErrorMessage(''), 3000);
       })
       .finally(() => {
         setIsLoading(false);
