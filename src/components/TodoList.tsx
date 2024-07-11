@@ -10,7 +10,7 @@ type Props = {
   onDelete: (id: number) => void;
   isLoading: boolean;
   deletingTodoId: number | null;
-  onEdit: (id: number, data: Partial<Todo>) => void;
+  onEdit: (id: number, data: Partial<Todo>) => Promise<void>;
   editingTodoId: number | null;
 };
 
@@ -29,6 +29,7 @@ export const TodoList: React.FC<Props> = ({
         <TodoItem
           todoItem={todo}
           onDelete={onDelete}
+          isLoading={isLoading}
           deletingTodoId={deletingTodoId}
           onEdit={onEdit}
           editingTodoId={editingTodoId}

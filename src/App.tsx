@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { UserWarning } from './UserWarning';
 import {
   createTodo,
@@ -14,7 +14,7 @@ import { TodoList } from './components/TodoList';
 import { Header } from './components/Header';
 import { getPrepearedTodos } from './utils/getPrepearedTodos';
 import { Footer } from './components/Footer';
-import { Error } from './components/Error';
+import { Error as ErrorNotification } from './components/Error';
 
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -26,6 +26,7 @@ export const App: React.FC = () => {
   const [tempTodo, setTempTodo] = useState<Todo | null>(null);
   const [deletingTodoId, setDeletingTodoId] = useState<number | null>(null);
   const [editingTodoId, setEditingTodoId] = useState<number | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setIsLoading(true);
@@ -36,6 +37,9 @@ export const App: React.FC = () => {
       })
       .finally(() => {
         setIsLoading(false);
+        setTimeout(() => {
+          inputRef.current?.focus();
+        }, 0);
       });
   }, []);
 
@@ -115,9 +119,9 @@ export const App: React.FC = () => {
   const handleEditTodo = async (id: number, data: Partial<Todo>) => {
     setIsLoading(true);
     setEditingTodoId(id);
-    try {
-      const editedTodo = await editTodo(id, data);
+    const editedTodo = await editTodo(id, data);
 
+    if (editedTodo.id) {
       setTodos(prevTodos =>
         prevTodos.map(todo => {
           if (todo.id === id) {
@@ -127,12 +131,14 @@ export const App: React.FC = () => {
           return todo;
         }),
       );
-    } catch {
-      setErrorMessage('Unable to update a todo');
-    } finally {
-      setIsLoading(false);
       setEditingTodoId(null);
+    } else {
+      setErrorMessage('Unable to update a todo');
+      setIsLoading(false);
+      throw new Error();
     }
+
+    setIsLoading(false);
   };
 
   const handleToggleAll = () => {
@@ -185,12 +191,14 @@ export const App: React.FC = () => {
       <div className="todoapp__content">
         <Header
           todos={todos}
+          tempTodo={tempTodo}
           onAdd={handleAddTodo}
           onError={handleError}
           isError={!!errorMessage}
           isLoading={isLoading}
           isAllCompleted={todos.every(todo => todo.completed)}
           onToggleAll={handleToggleAll}
+          ref={inputRef}
         />
 
         <TodoList
@@ -213,7 +221,7 @@ export const App: React.FC = () => {
         )}
       </div>
 
-      <Error
+      <ErrorNotification
         errorMessage={errorMessage}
         onCloseErrorMessage={() => setErrorMessage('')}
       />

@@ -7,14 +7,16 @@ import classNames from 'classnames';
 type Props = {
   todoItem: Todo;
   onDelete: (id: number) => void;
+  isLoading: boolean;
   deletingTodoId: number | null;
-  onEdit: (id: number, data: Partial<Todo>) => void;
+  onEdit: (id: number, data: Partial<Todo>) => Promise<void>;
   editingTodoId: number | null;
 };
 
 export const TodoItem: React.FC<Props> = ({
   todoItem,
   onDelete,
+  isLoading,
   deletingTodoId,
   onEdit,
   editingTodoId,
@@ -32,22 +34,20 @@ export const TodoItem: React.FC<Props> = ({
     setEditTitle(e.target.value);
   };
 
-  const handleEditBlur = async (todo: Todo) => {
+  const handleEditBlur = (todo: Todo) => {
     if (editTitle.trim() === '') {
       try {
-        await onDelete(todo.id);
+        onDelete(todo.id);
       } catch (err) {
         setCurrentEditing(todo.id);
         inputRef.current?.focus();
       }
     } else if (editTitle !== todo.title) {
-      try {
-        await onEdit(todo.id, { title: editTitle.trim() });
-        setCurrentEditing(null);
-      } catch (err) {
-        setCurrentEditing(todo.id);
-        inputRef.current?.focus();
-      }
+      onEdit(todo.id, { title: editTitle.trim() })
+        .then(() => setCurrentEditing(null))
+        .catch(() => {
+          //inputRef.current?.focus();
+        });
     } else {
       setCurrentEditing(null);
     }
@@ -130,7 +130,10 @@ export const TodoItem: React.FC<Props> = ({
         data-cy="TodoLoader"
         className={classNames('modal overlay', {
           'is-active':
-            todoItem.id === deletingTodoId || todoItem.id === editingTodoId,
+            isLoading &&
+            [deletingTodoId, editingTodoId, currentEditing].includes(
+              todoItem.id,
+            ),
         })}
       >
         <div className="modal-background has-background-white-ter" />
