@@ -1,7 +1,9 @@
 import classNames from 'classnames';
 import { useEffect, useRef, useState } from 'react';
+import { Todo } from '../types';
 
 type Props = {
+  todos: Todo[];
   onAdd: (title: string) => void;
   onError: (message: string) => void;
   isError: boolean;
@@ -11,6 +13,7 @@ type Props = {
 };
 
 export const Header: React.FC<Props> = ({
+  todos,
   onAdd,
   onError,
   isError,
@@ -49,12 +52,12 @@ export const Header: React.FC<Props> = ({
     if (!isLoading && !isError) {
       setTitle('');
     }
-  }, [isLoading]);
+  }, [isLoading, isError]);
 
   return (
     <header className="todoapp__header">
       {/* this button should have `active` class only if all todos are completed */}
-      {!isLoading && (
+      {!isLoading && todos.length > 0 && (
         <button
           type="button"
           className={classNames('todoapp__toggle-all', {

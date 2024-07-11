@@ -78,7 +78,7 @@ export const TodoList: React.FC<Props> = ({
     if (currentEditing !== null && inputRef.current) {
       inputRef.current.focus();
     }
-  }, [currentEditing]);
+  }, [currentEditing, inputRef]);
 
   return (
     <section className="todoapp__main" data-cy="TodoList">

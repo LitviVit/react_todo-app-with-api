@@ -189,6 +189,7 @@ export const App: React.FC = () => {
 
       <div className="todoapp__content">
         <Header
+          todos={todos}
           onAdd={handleAddTodo}
           onError={handleError}
           isError={!!errorMessage}
