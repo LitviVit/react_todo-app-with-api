@@ -25,7 +25,7 @@ export const Header: React.FC<Props> = ({
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (inputRef.current) {
+    if (inputRef.current && !isLoading) {
       inputRef.current.focus();
     }
   }, [isLoading]);
