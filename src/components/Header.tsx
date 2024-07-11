@@ -62,7 +62,6 @@ export const Header: React.FC<Props> = ({
           })}
           data-cy="ToggleAllButton"
           onClick={onToggleAll}
-          //disabled={isLoading}
         />
       )}
 

@@ -2,7 +2,7 @@
 /* eslint-disable react/jsx-no-comment-textnodes */
 import classNames from 'classnames';
 import { Todo } from '../types';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type Props = {
   todos: Todo[];
@@ -25,6 +25,7 @@ export const TodoList: React.FC<Props> = ({
 }) => {
   const [editTitle, setEditTitle] = useState('');
   const [currentEditing, setCurrentEditing] = useState<number | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleEdit = (todo: Todo) => {
     setEditTitle(todo.title);
@@ -35,14 +36,30 @@ export const TodoList: React.FC<Props> = ({
     setEditTitle(e.target.value);
   };
 
-  const handleEditBlur = (todo: Todo) => {
+  const handleEditBlur = async (todo: Todo) => {
+    //const trimmeredTitle = editTitle.trim();
+
     if (editTitle.trim() === '') {
-      onDelete(todo.id);
+      try {
+        await onDelete(todo.id);
+        //setCurrentEditing(null);
+      } catch (err) {
+        setCurrentEditing(todo.id);
+        inputRef.current?.focus();
+      }
     } else if (editTitle !== todo.title) {
-      onEdit(todo.id, { title: editTitle.trim() });
+      try {
+        await onEdit(todo.id, { title: editTitle.trim() });
+        setCurrentEditing(null);
+      } catch (err) {
+        setCurrentEditing(todo.id);
+        inputRef.current?.focus();
+      }
+    } else {
+      setCurrentEditing(null);
     }
 
-    setCurrentEditing(null);
+    //setCurrentEditing(null);
   };
 
   const handleEditKeyDown = (
@@ -56,6 +73,12 @@ export const TodoList: React.FC<Props> = ({
       setEditTitle(todo.title);
     }
   };
+
+  useEffect(() => {
+    if (currentEditing !== null && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [currentEditing]);
 
   return (
     <section className="todoapp__main" data-cy="TodoList">
@@ -106,6 +129,7 @@ export const TodoList: React.FC<Props> = ({
                 onBlur={() => handleEditBlur(todo)}
                 onKeyDown={e => handleEditKeyDown(e, todo)}
                 autoFocus
+                ref={inputRef}
               />
             </form>
           )}
