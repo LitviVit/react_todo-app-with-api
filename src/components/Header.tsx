@@ -49,7 +49,7 @@ export const Header: React.FC<Props> = ({
     if (!isLoading && !isError) {
       setTitle('');
     }
-  }, [isLoading]);
+  }, [isLoading, isError]);
 
   return (
     <header className="todoapp__header">
