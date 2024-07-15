@@ -35,7 +35,7 @@ export const TodoItem: React.FC<Props> = ({
   };
 
   const handleEditBlur = (todo: Todo) => {
-    if (editTitle.trim() === '') {
+    if (!editTitle.trim()) {
       try {
         onDelete(todo.id);
       } catch (err) {
@@ -136,6 +136,7 @@ export const TodoItem: React.FC<Props> = ({
         })}
       >
         <div className="modal-background has-background-white-ter" />
+
         <div className="loader" />
       </div>
     </div>

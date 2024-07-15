@@ -10,9 +10,9 @@ type Props = {
   tempTodo: Todo | null;
   onDelete: (id: number) => void;
   isLoading: boolean;
-  deletingTodoId: number | null;
+  deletedTodoId: number | null;
   onEdit: (id: number, data: Partial<Todo>) => Promise<void>;
-  editingTodoId: number | null;
+  editedTodoId: number | null;
 };
 
 export const TodoList: React.FC<Props> = ({
@@ -20,9 +20,9 @@ export const TodoList: React.FC<Props> = ({
   tempTodo,
   onDelete,
   isLoading,
-  deletingTodoId,
+  deletedTodoId: deletingTodoId,
   onEdit,
-  editingTodoId,
+  editedTodoId: editingTodoId,
 }) => {
   return (
     <section className="todoapp__main" data-cy="TodoList">

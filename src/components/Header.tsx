@@ -1,12 +1,12 @@
 import classNames from 'classnames';
 import { forwardRef, MutableRefObject, useEffect, useState } from 'react';
-import { Todo } from '../types';
+import { ErrorMessages, Todo } from '../types';
 
 type Props = {
   todos: Todo[];
   tempTodo: Todo | null;
   onAdd: (title: string) => void;
-  onError: (message: string) => void;
+  onError: (message: ErrorMessages) => void;
   isError: boolean;
   isLoading: boolean;
   isAllCompleted: boolean;
@@ -31,7 +31,7 @@ export const Header = forwardRef<HTMLInputElement, Props>(
     const [title, setTitle] = useState('');
 
     useEffect(() => {
-      if (inputRef && tempTodo === null) {
+      if (inputRef && !tempTodo) {
         (inputRef as MutableRefObject<HTMLInputElement>).current.focus();
       }
     }, [tempTodo, inputRef]);
@@ -42,8 +42,8 @@ export const Header = forwardRef<HTMLInputElement, Props>(
       const trimmedTitle = title.trim();
 
       if (trimmedTitle === '') {
-        onError('Title should not be empty');
-        setTimeout(() => onError(''), 3000);
+        onError(ErrorMessages.EMPTY_TITLE);
+        setTimeout(() => onError(ErrorMessages.DEFAULT), 3000);
 
         return;
       }
