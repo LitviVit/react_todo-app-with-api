@@ -34,16 +34,16 @@ export const TodoItem: React.FC<Props> = ({
     setEditTitle(e.target.value);
   };
 
-  const handleEditBlur = (todo: Todo) => {
+  const handleEditBlur = () => {
     if (!editTitle.trim()) {
       try {
-        onDelete(todo.id);
+        onDelete(todoItem.id);
       } catch (err) {
-        setCurrentEditing(todo.id);
+        setCurrentEditing(todoItem.id);
         inputRef.current?.focus();
       }
-    } else if (editTitle !== todo.title) {
-      onEdit(todo.id, { title: editTitle.trim() })
+    } else if (editTitle !== todoItem.title) {
+      onEdit(todoItem.id, { title: editTitle.trim() })
         .then(() => setCurrentEditing(null))
         .catch(() => {
           inputRef.current?.focus();
@@ -53,15 +53,12 @@ export const TodoItem: React.FC<Props> = ({
     }
   };
 
-  const handleEditKeyDown = (
-    e: React.KeyboardEvent<HTMLInputElement>,
-    todo: Todo,
-  ) => {
+  const handleEditKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      handleEditBlur(todo);
+      handleEditBlur();
     } else if (e.key === 'Escape') {
       setCurrentEditing(null);
-      setEditTitle(todo.title);
+      setEditTitle(todoItem.title);
     }
   };
 
@@ -117,8 +114,8 @@ export const TodoItem: React.FC<Props> = ({
             placeholder="Empty todo will be deleted"
             value={editTitle}
             onChange={handleEditChange}
-            onBlur={() => handleEditBlur(todoItem)}
-            onKeyDown={e => handleEditKeyDown(e, todoItem)}
+            onBlur={handleEditBlur}
+            onKeyDown={handleEditKeyDown}
             autoFocus
             ref={inputRef}
           />

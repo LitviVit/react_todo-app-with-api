@@ -18,7 +18,7 @@ import { Error as ErrorNotification } from './components/Error';
 
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [filterCompleting, setFilterCompleting] = useState<FilterOptions>(
+  const [filterType, setFilterType] = useState<FilterOptions>(
     FilterOptions.ALL,
   );
   const [errorMessage, setErrorMessage] = useState<ErrorMessages>(
@@ -30,6 +30,7 @@ export const App: React.FC = () => {
   const [editedTodoId, setEditingTodoId] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const activeTodos = todos.filter(todo => !todo.completed);
   const isAllActive = todos.every(todo => !todo.completed);
   const isAllCompleted = todos.every(todo => todo.completed);
 
@@ -113,7 +114,9 @@ export const App: React.FC = () => {
             setTodos(prevTodos => {
               const deletedTodo = todo.value as Todo;
 
-              return prevTodos.filter(todo1 => todo1.id !== deletedTodo.id);
+              return prevTodos.filter(
+                prevTodo => prevTodo.id !== deletedTodo.id,
+              );
             });
           }
         });
@@ -186,8 +189,8 @@ export const App: React.FC = () => {
   };
 
   const filteredTodos = useMemo(
-    () => getPrepearedTodos(todos, filterCompleting),
-    [todos, filterCompleting],
+    () => getPrepearedTodos(todos, filterType),
+    [todos, filterType],
   );
 
   if (!USER_ID) {
@@ -223,9 +226,9 @@ export const App: React.FC = () => {
 
         {!!todos.length && (
           <Footer
-            todos={todos.filter(todo => !todo.completed)}
-            filter={filterCompleting}
-            setFilter={setFilterCompleting}
+            activeTodos={activeTodos}
+            filter={filterType}
+            setFilter={setFilterType}
             isAllActive={isAllActive}
             onDeleteCompleted={handleDeleteCompletedTodos}
           />
